@@ -1,0 +1,72 @@
+def get_shot(guesses):
+   ok = "n"
+   while ok == "n":
+       try:
+          shot = input("Introdu coordonatele: ")
+          shot = int(shot)
+          if shot < 0 or shot > 99:
+              print("Coordonate incorecte, reincearca: ")
+          elif shot in guesses:
+              print("Aceste coordonate au fost folosite!")
+          else:
+              ok = "y"
+              break
+       except:
+          print ("Coordonate incorecte, reincearca! ")
+   return shot
+
+def show_board(hit,miss,compsink):
+    print("         BATTLESHIPS          ")
+    print("    0  1  2  3  4  5  6  7  8  9")
+
+    place = 0
+    for x in range(10):
+        row = ""
+        for y in range(10):
+            ch = " _ "
+            if place in miss:
+                ch = " # "
+            elif place in hit:
+                ch = " x "
+            elif place in compsink:
+                ch = " X "
+
+            row = row + ch
+            place = place + 1
+        print(x, "", row)
+
+def check_shot(shot,boat1,boat2,hit,miss,compsink):
+    if shot in boat1:
+        boat1.remove(shot)
+        if len(boat1)>0:
+            hit.append(shot)
+        else:
+            compsink.append(shot)
+    elif shot in boat2:
+        boat2.remove(shot)
+        if len(boat2)>0:
+            hit.append(shot)
+        else:
+            compsink.append(shot)
+    else:
+        miss.append(shot)
+
+    return boat1,boat2,hit,miss,compsink
+
+
+boat1=[45,46,47]
+boat2=[6,16,26]
+hit = []
+miss = []
+compsink = []
+
+for i in range(20):
+     guesses = hit + miss + compsink
+     shot = get_shot(guesses)
+     boat1,boat2,hit,miss,compsink = check_shot(shot,boat1,boat2,hit,miss,compsink)
+     show_board(hit,miss,compsink)
+
+     if len(boat1) < 1 and len(boat2) < 1:
+         print("You WON!!!")
+         break
+print("No more bullets")
